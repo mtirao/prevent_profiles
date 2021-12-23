@@ -19,7 +19,7 @@ instance Controller DoctorsController where
                     render NewDoctor { .. }
             _ ->  do
                     let doctor = newRecord
-                    render NewDoctor { .. }        
+                    render NewView { .. }        
         
 
     action DoctorsAction = do

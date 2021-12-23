@@ -38,4 +38,5 @@ data PatientsController
     | EditPatientAction { patientId :: !(Id Patient) }
     | UpdatePatientAction { patientId :: !(Id Patient) }
     | DeletePatientAction { patientId :: !(Id Patient) }
+    | NewProfilePatientAction { profileId :: !(Id Profile) }
     deriving (Eq, Show, Data)

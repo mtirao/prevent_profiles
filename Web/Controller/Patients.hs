@@ -5,8 +5,19 @@ import Web.View.Patients.Index
 import Web.View.Patients.New
 import Web.View.Patients.Edit
 import Web.View.Patients.Show
+import Web.View.Patients.NewPatient
 
 instance Controller PatientsController where
+    action NewProfilePatientAction { profileId } = do
+        case profileId of
+            Id a -> do 
+                    let patient = newRecord
+                                |> set #profileId a
+                    render NewPatientView { .. }
+            _ ->  do
+                    let patient = newRecord
+                    render NewView { .. }    
+
     action PatientsAction = do
         patients <- query @Patient |> fetch
         render IndexView { .. }

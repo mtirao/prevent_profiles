@@ -33,6 +33,7 @@ renderProfile profile = [hsx|
     <tr>
         <td>{(get #firstName profile)}, {(get #lastName profile)}</td>
         <td><a href={NewProfileDoctorAction (get #id profile)}>Doctor</a></td>
+        <td><a href={NewProfilePatientAction (get #id profile)}>Patient</a></td>
         <td><a href={ShowProfileAction (get #id profile)}>Show</a></td>
         <td><a href={EditProfileAction (get #id profile)} class="text-muted">Edit</a></td>
         <td><a href={DeleteProfileAction (get #id profile)} class="js-delete text-muted">Delete</a></td>
