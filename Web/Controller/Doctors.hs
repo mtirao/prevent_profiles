@@ -14,12 +14,20 @@ instance Controller DoctorsController where
         
         case profileId of
             Id a -> do 
-                    let doctor = newRecord
-                                |> set #profileId a
-                    render NewDoctor { .. }
+                    doctors <- query @Doctor
+                        |> filterWhere (#profileId, a)
+                        |> fetch
+                    if Web.Controller.Prelude.null doctors then do
+                            let doctor = newRecord
+                                            |> set #profileId a
+                            render NewDoctor { .. }
+                        else do
+                            setSuccessMessage "User is already a doctor"
+                            allDoctors <- query @Doctor |> fetch
+                            render IndexView { .. }  
             _ ->  do
                     let doctor = newRecord
-                    render NewView { .. }        
+                    render NewView { .. }  
         
 
     action DoctorsAction = do

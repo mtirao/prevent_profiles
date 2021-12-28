@@ -23,6 +23,7 @@ ALTER TABLE public.doctors ENABLE TRIGGER ALL;
 
 ALTER TABLE public.patients DISABLE TRIGGER ALL;
 
+INSERT INTO public.patients (id, insurance_type, preferred_contact_method, profile_id, national_id, birthday) VALUES ('3628328f-8630-47d9-8b06-6f8e51ddd6b9', 'galeno', 'phone', '3b42e8f3-835c-4a28-b378-d8ac2692a031', '92525840', '1858-11-17');
 
 
 ALTER TABLE public.patients ENABLE TRIGGER ALL;

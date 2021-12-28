@@ -19,6 +19,6 @@ renderForm :: Doctor -> Html
 renderForm doctor = formFor doctor [hsx|
     {(textField #realm)}
     {(textField #licenseNumber)}
-    {(textField #profileId)}
+    {(hiddenField #profileId)}
     {submitButton}
 |]

@@ -21,7 +21,7 @@ renderForm patient = formFor patient [hsx|
     {(textField #preferredContactMethod)}
     {(textField #profileId)}
     {(textField #nationalId)}
-    {(textField #birthday)}
+    {(dateField #birthday)}
     {submitButton}
 
 |]

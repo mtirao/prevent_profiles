@@ -9,18 +9,7 @@ instance View IndexView where
 
         <h1>Index<a href={pathTo NewPatientAction} class="btn btn-primary ml-4">+ New</a></h1>
         <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Patient</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>{forEach patients renderPatient}</tbody>
-            </table>
-            
+            {forEach patients renderPatient}
         </div>
     |]
         where
@@ -30,10 +19,30 @@ instance View IndexView where
 
 renderPatient :: Patient -> Html
 renderPatient patient = [hsx|
-    <tr>
-        <td>{patient}</td>
-        <td><a href={ShowPatientAction (get #id patient)}>Show</a></td>
-        <td><a href={EditPatientAction (get #id patient)} class="text-muted">Edit</a></td>
-        <td><a href={DeletePatientAction (get #id patient)} class="js-delete text-muted">Delete</a></td>
-    </tr>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Issurance</h6>
+                <small class="text-muted">{(get #insuranceType patient)}</small>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Preferred Contact Method</h6>
+                <small class="text-muted">{(get #preferredContactMethod patient)}</small>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Nationa ID Number</h6>
+                <small class="text-muted">{(get #nationalId patient)}</small>
+              </div>
+            </li>
+             <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Birthday</h6>
+                <small class="text-muted">{(get #birthday patient)}</small>
+              </div>
+            </li>
+        </ul>
 |]

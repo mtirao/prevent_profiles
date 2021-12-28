@@ -22,5 +22,5 @@ CREATE TABLE patients (
     preferred_contact_method TEXT NOT NULL,
     profile_id UUID NOT NULL,
     national_id TEXT NOT NULL,
-    birthday DATE NOT NULL
+    birthday TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL
 );

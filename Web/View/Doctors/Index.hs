@@ -9,18 +9,7 @@ instance View IndexView where
 
         <h1>Index<a href={pathTo NewDoctorAction} class="btn btn-primary ml-4">+ New</a></h1>
         <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>{forEach doctors renderDoctor}</tbody>
-            </table>
-            
+            {forEach doctors renderDoctor}
         </div>
     |]
         where
@@ -30,10 +19,27 @@ instance View IndexView where
 
 renderDoctor :: Doctor -> Html
 renderDoctor doctor = [hsx|
-    <tr>
-        <td>{doctor}</td>
-        <td><a href={ShowDoctorAction (get #id doctor)}>Show</a></td>
-        <td><a href={EditDoctorAction (get #id doctor)} class="text-muted">Edit</a></td>
-        <td><a href={DeleteDoctorAction (get #id doctor)} class="js-delete text-muted">Delete</a></td>
-    </tr>
+
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">Actions</h6>
+                <a href={ShowDoctorAction (get #id doctor)}>Show </a>
+                <a href={EditDoctorAction (get #id doctor)} class="text-muted">Edit </a>
+                <a href={DeleteDoctorAction (get #id doctor)} class="js-delete text-muted">Delete </a>
+            </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+            <h6 class="my-0">Realm</h6>
+            <small class="text-muted">{(get #realm doctor)}</small>
+            </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+            <h6 class="my-0">License Number</h6>
+            <small class="text-muted">{(get #licenseNumber doctor)}</small>
+            </div>
+        </li>
+    </ul>
 |]

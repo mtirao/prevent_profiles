@@ -6,14 +6,24 @@ import Web.View.Patients.New
 import Web.View.Patients.Edit
 import Web.View.Patients.Show
 import Web.View.Patients.NewPatient
+import qualified Data.Time.Format as LT
 
 instance Controller PatientsController where
     action NewProfilePatientAction { profileId } = do
+
         case profileId of
             Id a -> do 
-                    let patient = newRecord
-                                |> set #profileId a
-                    render NewPatientView { .. }
+                    patients <- query @Patient
+                        |> filterWhere (#profileId, a)
+                        |> fetch
+                    if Web.Controller.Prelude.null patients then do
+                            let patient = newRecord
+                                    |> set #profileId a
+                            render NewPatientView { .. }
+                        else do
+                            setSuccessMessage "User is already a patient"
+                            allPatients <- query @Patient |> fetch
+                            render IndexView { .. }  
             _ ->  do
                     let patient = newRecord
                     render NewView { .. }    
@@ -28,6 +38,9 @@ instance Controller PatientsController where
 
     action ShowPatientAction { patientId } = do
         patient <- fetch patientId
+
+        let patienBirthday = LT.formatTime LT.defaultTimeLocale "%0Y-%m-%d" (get #birthday patient)
+
         render ShowView { .. }
 
     action EditPatientAction { patientId } = do

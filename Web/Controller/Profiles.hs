@@ -49,6 +49,7 @@ instance Controller ProfilesController where
     action DeleteProfileAction { profileId } = do
         profile <- fetch profileId
         deleteRecord profile
+        
         setSuccessMessage "Profile deleted"
         redirectTo ProfilesAction
 
