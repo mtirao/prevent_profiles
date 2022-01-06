@@ -40,3 +40,11 @@ data PatientsController
     | DeletePatientAction { patientId :: !(Id Patient) }
     | NewProfilePatientAction { profileId :: !(Id Profile) }
     deriving (Eq, Show, Data)
+
+data DoctorsApiController
+    = DoctorApiAction
+    deriving (Eq, Show, Data)
+
+data ProfilesApiController
+    = ProfileApiAction
+    deriving (Eq, Show, Data)

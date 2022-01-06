@@ -9,6 +9,8 @@ import Web.Controller.Patients
 import Web.Controller.Doctors
 import Web.Controller.Profiles
 import Web.Controller.Static
+import Web.Controller.DoctorsApi
+import Web.Controller.ProfilesApi
 
 instance FrontController WebApplication where
     controllers = 
@@ -17,6 +19,8 @@ instance FrontController WebApplication where
         , parseRoute @PatientsController
         , parseRoute @DoctorsController
         , parseRoute @ProfilesController
+        , parseRoute @DoctorsApiController
+        , parseRoute @ProfilesApiController
         ]
 
 instance InitControllerContext WebApplication where
