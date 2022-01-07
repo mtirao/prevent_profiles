@@ -6,6 +6,18 @@ import Web.View.Profiles.New
 import Web.View.Profiles.Edit
 import Web.View.Profiles.Show
 
+instance ToJSON Profile where
+    toJSON profile = object
+        [ "id" .= get #id profile
+        , "mobile" .= get #cellPhone profile
+        , "firstname" .= get #firstName profile
+        , "lastname" .= get #lastName profile
+        , "phone" .= get #phone profile
+        , "username" .= get #userName profile
+        , "userrole" .= get #userRole profile
+        , "email" .= get #email profile
+        ]
+
 instance Controller ProfilesController where
     action ProfilesAction = do
         profiles <- query @Profile |> fetch

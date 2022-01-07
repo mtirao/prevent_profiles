@@ -5,22 +5,14 @@ module Web.Controller.DoctorsApi where
 import Web.Controller.Prelude
 import Data.Attoparsec.Char8
 import Control.Applicative
+import Web.Controller.Doctors
 
 
 instance CanRoute DoctorsApiController where
-    parseRoute' = string "/api/v1/doctors" <* endOfInput >> pure DoctorApiAction
+    parseRoute' = string "/api/v1/doctors/" <* endOfInput >> pure DoctorApiAction
 
 instance HasPath DoctorsApiController where
-    pathTo DoctorApiAction  = "/api/v1/doctors"
-    
-
-instance ToJSON Doctor where
-    toJSON doctor= object
-        [ "id" .= get #id doctor
-        , "profile" .= get #profileId doctor
-        , "license" .= get #licenseNumber doctor
-        , "realm" .= get #licenseNumber doctor
-        ]
+    pathTo DoctorApiAction  = "/api/v1/doctors/"
 
 instance Controller DoctorsApiController  where
     action  DoctorApiAction = do

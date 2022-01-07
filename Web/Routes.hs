@@ -7,7 +7,6 @@ import Web.Types
 instance AutoRoute StaticController
 instance AutoRoute ProfilesController
 
-
 instance AutoRoute DoctorsController
 
 instance AutoRoute PatientsController

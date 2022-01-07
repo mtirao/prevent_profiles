@@ -45,6 +45,14 @@ data DoctorsApiController
     = DoctorApiAction
     deriving (Eq, Show, Data)
 
+data SingleDoctorApiController
+    = SingleDoctorApiAction  { doctorId :: !(Id Doctor) }
+    deriving (Eq, Show, Data)
+
 data ProfilesApiController
     = ProfileApiAction
+    deriving (Eq, Show, Data)
+
+data SingleProfileApiController
+    = SingleProfileApiAction { profileId :: !(Id Profile) }
     deriving (Eq, Show, Data)

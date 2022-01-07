@@ -8,6 +8,14 @@ import Web.View.Doctors.Edit
 import Web.View.Doctors.Show
 import Data.UUID
 
+instance ToJSON Doctor where
+    toJSON doctor= object
+        [ "id" .= get #id doctor
+        , "profile" .= get #profileId doctor
+        , "license" .= get #licenseNumber doctor
+        , "realm" .= get #licenseNumber doctor
+        ]
+
 instance Controller DoctorsController where
 
     action NewProfileDoctorAction { profileId } = do
