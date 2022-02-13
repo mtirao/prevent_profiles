@@ -8,6 +8,7 @@ import Web.View.Doctors.Edit
 import Web.View.Doctors.Show
 import Data.UUID
 
+
 instance ToJSON Doctor where
     toJSON doctor= object
         [ "id" .= get #id doctor

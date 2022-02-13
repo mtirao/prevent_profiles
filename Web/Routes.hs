@@ -10,5 +10,3 @@ instance AutoRoute ProfilesController
 instance AutoRoute DoctorsController
 
 instance AutoRoute PatientsController
-
-instance AutoRoute ProfilesApiController

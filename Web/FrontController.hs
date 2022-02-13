@@ -13,6 +13,7 @@ import Web.Controller.DoctorsApi
 import Web.Controller.ProfilesApi
 import Web.Controller.SingleDoctorApi
 import Web.Controller.SingleProfileApi
+import Web.Controller.AuthenticateApi
 
 instance FrontController WebApplication where
     controllers = 
@@ -25,6 +26,7 @@ instance FrontController WebApplication where
         , parseRoute @ProfilesApiController
         , parseRoute @SingleDoctorApiController
         , parseRoute @SingleProfileApiController
+        , parseRoute @AuthenticateApiController 
         ]
 
 instance InitControllerContext WebApplication where

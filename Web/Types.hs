@@ -56,3 +56,7 @@ data ProfilesApiController
 data SingleProfileApiController
     = SingleProfileApiAction { profileId :: !(Id Profile) }
     deriving (Eq, Show, Data)
+
+data AuthenticateApiController
+    = AuthenticateApiAction
+    deriving (Eq, Show, Data)
