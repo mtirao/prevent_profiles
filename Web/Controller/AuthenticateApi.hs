@@ -41,10 +41,12 @@ instance Controller AuthenticateApiController  where
         loginRequest <- return $ (decode body :: Maybe Login)
 
         case loginRequest of
-            Nothing -> renderJsonWithStatusCode status404 (toJSON (LoginMessage "Authenticate Failed"))
+            Nothing -> renderJsonWithStatusCode status400 (toJSON (LoginMessage "Invalid request"))
             Just a -> do 
-                        profileApi <-query @Profile
+                        profileApi <- query @Profile
                             |> filterWhere (#userName, username a)
                             |> filterWhere (#userPassword, password a)
                             |> fetch
-                        renderJson (toJSON profileApi)
+                        case profileApi of
+                            [] -> renderJsonWithStatusCode status403 (toJSON (LoginMessage "Authenticate Failed"))
+                            (a:as) -> renderJson (toJSON a)
