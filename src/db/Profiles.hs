@@ -1,4 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module Profiles where
+module Db.Profiles where

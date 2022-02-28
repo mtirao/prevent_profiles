@@ -39,3 +39,7 @@ executable profiles
                     , time
     other-modules: 
         Db.Db
+        , Domain
+        , Db.Doctors
+        , Db.Patients
+        , Db.Profiles

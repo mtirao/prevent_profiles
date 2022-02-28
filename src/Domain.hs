@@ -44,11 +44,10 @@ data Profile = Profile
     , userPassword :: Text
     , userRole :: Text
     , profileId :: Integer
-    }deriving (Show)
+    } deriving (Show)
 
 instance ToJSON Profile where
     toJSON Profile {..} = object [
-        [
             "cellphone" .= cellPhone,
             "email" .= email,
             "firstname" .= firstName,
@@ -70,11 +69,11 @@ data Doctor = Doctor
 
 instance ToJSON Doctor where
     toJSON Doctor {..} = object [
-        [
             "doctorid" .= doctorId,
             "lincesenumber" .= licenseNumber,
             "profileid" .= relDoctorProfileId,
             "realm" .= realm
+        ]
 
 -- Patient
 data Patient = Patient
@@ -88,11 +87,11 @@ data Patient = Patient
     }
 
 instance ToJSON Patient where
-    toJSON Patient {..} object [
-        "birthday" .= doctorId,
-        "patientid" .= licenseNumber,
-        "insurancetype" .= insuranceType,
-        "nationalId" .= nationalId,
-        "preferredContactMethod" .= preferredContactMethod,
-        "profileid" .= relPatientProfileId
-    ]
+    toJSON Patient {..} = object [
+            "birthday" .= birthday,
+            "patientid" .= patientId,
+            "insurancetype" .= insuranceType,
+            "nationalId" .= nationalId,
+            "preferredContactMethod" .= preferredContactMethod,
+            "profileid" .= relPatientProfileId
+        ]
