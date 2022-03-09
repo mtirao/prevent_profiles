@@ -17,29 +17,43 @@ import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.Text as T
 import GHC.Int
 import Data.Time.LocalTime
+import Data.Time.Clock
+import Data.Time.Calendar
 
 
 instance DbOperation Patient where
     insert pool (Just a) = do
         res <- fetch pool ((birthday a), (insuranceType a), (nationalId a), (preferredContactMethod a), (relPatientProfileId a)) 
-                            "INSERT INTO patients(birthday, insuranceType, nationalId, preferredContactMethod, relPatientProfileId) VALUES(?,?,?,?,?) RETURNING  birthday, patientId, insuranceType, nationalId, preferredContactMethod, relPatientProfileId" :: IO [(LocalTime, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                            "INSERT INTO patients(birthday, insurance_type, national_id, preferred_contact_method, profile_id) VALUES(?,?,?,?,?) RETURNING  birthday, id, insurance_type, national_id, preferred_contact_method, profile_id" :: IO [(LocalTime, Maybe Integer, TL.Text, TL.Text, TL.Text, Integer)]
         return $ oneAgent res
             where oneAgent ((birthday, patientId, insuranceType, nationalId, preferredContactMethod, relPatientProfileId) : _) = Just $ Patient birthday patientId insuranceType nationalId preferredContactMethod relPatientProfileId
                   oneAgent _ = Nothing
     
     update pool (Just a) id= do
         res <- fetch pool ((birthday a), (insuranceType a), (nationalId a), (preferredContactMethod a), (relPatientProfileId a)) 
-                            "UPDATE agents SET agenttype=?, ip=?  WHERE id=?" :: IO [(LocalTime, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                            "UPDATE agents SET agenttype=?, ip=?  WHERE id=?" :: IO [(LocalTime, Maybe Integer, TL.Text, TL.Text, TL.Text, Integer)]
         return $ oneAgent res
             where oneAgent ((birthday, patientId, insuranceType, nationalId, preferredContactMethod, relPatientProfileId) : _) = Just $ Patient birthday patientId insuranceType nationalId preferredContactMethod relPatientProfileId
                   oneAgent _ = Nothing
 
     find  pool id = do 
-                        res <- fetch pool (Only id) "SELECT id,birthday, insuranceType, nationalId, preferredContactMethod, relPatientProfileId FROM patients WHERE id=?" :: IO [(LocalTime, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                        res <- fetch pool (Only id) "SELECT birthday, id, insuranceType, nationalId, preferredContactMethod, relPatientProfileId FROM patients WHERE id=?" :: IO [(LocalTime, Maybe Integer, TL.Text, TL.Text, TL.Text, Integer)]
                         return $ oneAgent res
                             where oneAgent ((birthday, patientId, insuranceType, nationalId, preferredContactMethod, relPatientProfileId) : _) = Just $ Patient birthday patientId insuranceType nationalId preferredContactMethod relPatientProfileId
                                   oneAgent _ = Nothing
 
     list  pool = do
-                    res <- fetchSimple pool "SELECT id, birthday, insuranceType, nationalId, preferredContactMethod, relPatientProfileId FROM patients" :: IO [(LocalTime, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                    res <- fetchSimple pool "SELECT birthday, id, insuranceType, nationalId, preferredContactMethod, relPatientProfileId FROM patients" :: IO [(LocalTime, Maybe Integer, TL.Text, TL.Text, TL.Text, Integer)]
                     return $ map (\(birthday, patientId, insuranceType, nationalId, preferredContactMethod, relPatientProfileId) -> Patient birthday patientId insuranceType nationalId preferredContactMethod relPatientProfileId) res
+
+
+instance DbViewOperation PatientView where
+    vlist pool = do
+                    res <- fetchSimple pool "SELECT birthday, id, last_name, first_name FROM patient_view" :: IO [(LocalTime, Integer, TL.Text, TL.Text)]
+                    return $ map (\(birthday, patientId, lastName, firstName) -> PatientView birthday patientId lastName firstName) res
+
+    vfind pool id = do 
+                        res <- fetch pool (Only id) "SELECT birthday, id, last_name, first_name FROM patient_view WHERE id=?" :: IO [(LocalTime, Integer, TL.Text, TL.Text)]
+                        return $ oneAgent res
+                            where oneAgent ((birthday, patientId, lastName, firstName) : _) = Just $ PatientView birthday patientId firstName lastName
+                                  oneAgent _ = Nothing

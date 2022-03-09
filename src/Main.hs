@@ -1,5 +1,13 @@
 module Main where
 
+import Db.Db as Db
+
+import Domain
+import Views
+
+import Controller.ProfilesController
+import Controller.PatientsController
+
 import qualified Data.Configurator as C
 import qualified Data.Configurator.Types as C
 import qualified Data.Text.Lazy as TL
@@ -11,7 +19,7 @@ import Web.Scotty.Internal.Types (ActionT)
 
 import Database.PostgreSQL.Simple
 
-import Db.Db as Db
+import Control.Monad.IO.Class
 
 import Network.Wai.Middleware.Static
 import Network.Wai.Middleware.RequestLogger (logStdout)
@@ -43,4 +51,27 @@ main = do
                 middleware $ staticPolicy (noDots >-> addBase "static") -- serve static files
                 middleware $ logStdout    
 
-                get "/" $ do text "hello"
+
+                -- AUTH
+                post   "/api/prevent/accounts/login" $ do 
+                                            b <- body
+                                            login <- return $ (decode b :: Maybe Login)
+                                            result <- liftIO $ findUserByLogin pool (TL.unpack (getUserName login))
+                                            case result of 
+                                                Nothing -> do 
+                                                            jsonResponse (ErrorMessage "User not found")
+                                                            status forbidden403
+                                                Just a -> 
+                                                            if (userPassword a) == (getPassword login) 
+                                                            then jsonResponse a
+                                                            else do 
+                                                                    jsonResponse (ErrorMessage "Wrong password") 
+                                                                    status forbidden403
+
+
+                -- PROFILES
+                post "/api/prevent/profile" $ createProfile pool
+
+                -- PATIENTS
+                post "/api/prevent/patient" $ createPatient pool
+                get "/api/prevent/patients" $ listPatient pool

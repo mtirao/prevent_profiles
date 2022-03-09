@@ -38,8 +38,12 @@ executable profiles
                     , http-types
                     , time
     other-modules: 
-        Db.Db
-        , Domain
+        Domain
+        , Views
+        , Db.Db
         , Db.Doctors
         , Db.Patients
         , Db.Profiles
+        , Controller.ProfilesController
+        , Controller.PatientsController
+        

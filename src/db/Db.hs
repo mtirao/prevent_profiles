@@ -3,6 +3,8 @@
 
 module Db.Db where
 
+import Domain
+
 import Web.Scotty.Internal.Types (ActionT)
 import GHC.Generics (Generic)
 import Control.Monad.IO.Class
@@ -72,12 +74,13 @@ execSqlT pool args sql = withResource pool ins
 
 --------------------------------------------------------------------------------
 
--- findUserByLogin :: Pool Connection -> String -> IO (Maybe User)
--- findUserByLogin pool login = do
---          res <- liftIO $ fetch pool (Only login) "SELECT role, password, username, name, lastname FROM users WHERE username=?" :: IO [(String, String, String, String, String)]
---          return $ userResponse res
---          where userResponse [(role, pwd, usrname, name, lastname)] = Just (User (TL.pack pwd) (TL.pack usrname) (TL.pack name) (TL.pack lastname) (TL.pack role))
---                userResponse _ = Nothing
+findUserByLogin :: Pool Connection -> String -> IO (Maybe Profile)
+findUserByLogin pool login = do
+          res <- liftIO $ fetch pool (Only login) "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id FROM profiles WHERE user_name=?" :: IO [(TL.Text,TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer)]
+          return $ oneProfile res
+            where oneProfile ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id
+                  oneProfile _ = Nothing
+
 
 --------------------------------------------------------------------------------
 
@@ -86,5 +89,10 @@ class DbOperation a where
     update :: Pool Connection -> Maybe a -> TL.Text -> IO (Maybe a)
     find :: Pool Connection -> TL.Text -> IO (Maybe a)
     list :: Pool Connection -> IO [a]
+
+--------------------------------------------------------------------------------
+class DbViewOperation a where
+    vfind :: Pool Connection -> TL.Text -> IO (Maybe a)
+    vlist :: Pool Connection -> IO [a]
 
 --------------------------------------------------------------------------------

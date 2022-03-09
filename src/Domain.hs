@@ -33,6 +33,18 @@ instance FromJSON Login where
         v .:  "username" <*>
         v .:  "password"
 
+
+--ErrorMessage
+data ErrorMessage = ErrorMessage Text
+    deriving (Show)
+
+instance ToJSON ErrorMessage where
+    toJSON (ErrorMessage message) = object
+        [
+            "error" .= message
+        ]
+
+
 -- Profile
 data Profile = Profile
     {cellPhone :: Text
@@ -43,7 +55,7 @@ data Profile = Profile
     , userName :: Text
     , userPassword :: Text
     , userRole :: Text
-    , profileId :: Integer
+    , profileId :: Maybe Integer
     } deriving (Show)
 
 instance ToJSON Profile where
@@ -57,6 +69,18 @@ instance ToJSON Profile where
             "userrole" .= userRole,
             "profileid" .= profileId
         ]
+
+instance FromJSON Profile where
+    parseJSON (Object v) = Profile <$>
+        v .:  "cellphone" <*>
+        v .:  "email" <*>
+        v .:  "firstname" <*>
+        v .:  "lastname" <*>
+        v .:  "phone" <*>
+        v .:  "username" <*>
+        v .:  "userpassword" <*>
+        v .:  "userrole" <*>
+        v .:?  "profileid"
 
 -- Doctor
 data Doctor = Doctor
@@ -75,11 +99,18 @@ instance ToJSON Doctor where
             "realm" .= realm
         ]
 
+instance FromJSON Doctor where
+    parseJSON (Object v) = Doctor <$>
+        v .:  "doctorid" <*>
+        v .:  "lincesenumber" <*>
+        v .:  "profileid" <*>
+        v .:  "realm"
+
 -- Patient
 data Patient = Patient
     {
         birthday :: LocalTime
-        , patientId :: Integer
+        , patientId :: Maybe Integer
         , insuranceType :: Text
         , nationalId :: Text
         , preferredContactMethod :: Text
@@ -94,4 +125,41 @@ instance ToJSON Patient where
             "nationalId" .= nationalId,
             "preferredContactMethod" .= preferredContactMethod,
             "profileid" .= relPatientProfileId
+        ]
+
+instance FromJSON Patient where
+    parseJSON (Object v) = Patient <$>
+            v .: "birthday" <*>
+            v .:? "patientid" <*>
+            v .: "insurancetype" <*>
+            v .: "nationalId" <*>
+            v .: "preferredContactMethod" <*>
+            v .: "profileid"
+
+-- Getters
+getUserName :: Maybe Login -> Text
+getUserName a = case a of
+                Nothing -> ""
+                Just (Login u p) -> u   
+
+getPassword :: Maybe Login -> Text
+getPassword a = case a of
+                Nothing -> ""
+                Just (Login u p) -> p
+
+--- Patient view
+data PatientView = PatientView
+    {
+        v_birthday :: LocalTime
+        , v_patientId :: Integer
+        , v_first_name :: Text
+        , v_last_name :: Text
+    }
+
+instance ToJSON PatientView where
+    toJSON PatientView {..} = object [
+            "birthday" .= v_birthday,
+            "patientid" .= v_patientId,
+            "firstname" .= v_first_name,
+            "lastname" .= v_last_name
         ]
