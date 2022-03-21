@@ -22,25 +22,25 @@ import Data.Time.LocalTime
 
 instance DbOperation Profile where
     insert pool (Just a) = do
-        res <- fetch pool ((cellPhone a), (email a), (firstName a), (lastName a), (phone a), (userName a), (userPassword a), (userRole a)) 
-                            "INSERT INTO profiles(cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role) VALUES(?,?,?,?,?,?,?,?) RETURNING  cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer)]
+        res <- fetch pool ((cellPhone a), (email a), (firstName a), (lastName a), (phone a), (userName a), (userPassword a), (userRole a), (gender a), (address a), (city a)) 
+                            "INSERT INTO profiles(cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, gender, address, city) VALUES(?,?,?,?,?,?,?,?,?,?,?) RETURNING  cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id, gender, address, city" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer, TL.Text, TL.Text, TL.Text)]
         return $ oneAgent res
-            where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id
+            where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id, gender, address, city) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id gender address city
                   oneAgent _ = Nothing
     
     update pool (Just a) id= do
-        res <- fetch pool ((cellPhone a), (email a), (firstName a), (lastName a), (phone a), (userName a), (userPassword a), (userRole a), id) 
-                            "UPDATE profiles SET cell_phone=?, email=?, first_name=?, last_name=?, phone=?, user_name=?, user_password=?, user_role=?  WHERE id=?" :: IO [(TL.Text,TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer)]
+        res <- fetch pool ((cellPhone a), (email a), (firstName a), (lastName a), (phone a), (userName a), (userPassword a), (userRole a), id, (gender a), (address a), (city a)) 
+                            "UPDATE profiles SET cell_phone=?, email=?, first_name=?, last_name=?, phone=?, user_name=?, user_password=?, user_role=?, gender=?, address=?, city=? WHERE id=?" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer, TL.Text, TL.Text, TL.Text)]
         return $ oneAgent res
-            where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id
+            where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id, gender, address, city) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id gender address city
                   oneAgent _ = Nothing
 
     find  pool id = do 
-                        res <- fetch pool (Only id) "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id FROM profiles WHERE id=?" :: IO [(TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer)]
+                        res <- fetch pool (Only id) "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id, gender, address, city FROM profiles WHERE id=?" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer, TL.Text, TL.Text, TL.Text)]
                         return $ oneAgent res
-                           where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id
+                           where oneAgent ((cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id, gender, address, city) : _) = Just $ Profile cellPhone email firstName lastName phone userName userPassword userRole id gender address city
                                  oneAgent _ = Nothing
     
     list  pool = do
-                    res <- fetchSimple pool "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id FROM profiles" :: IO [(TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer)]
-                    return $ map (\(cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id) -> Profile cellPhone email firstName lastName phone userName userPassword userRole id) res
+                    res <- fetchSimple pool "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id, gender, address, city FROM profiles" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer, TL.Text, TL.Text, TL.Text)]
+                    return $ map (\(cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id, gender, address, city) -> Profile cellPhone email firstName lastName phone userName userPassword userRole id gender address city) res

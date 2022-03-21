@@ -56,6 +56,9 @@ data Profile = Profile
     , userPassword :: Text
     , userRole :: Text
     , profileId :: Maybe Integer
+    , gender :: Text
+    , address :: Text
+    , city :: Text
     } deriving (Show)
 
 instance ToJSON Profile where
@@ -67,7 +70,10 @@ instance ToJSON Profile where
             "phone" .= phone,
             "username" .= userName,
             "userrole" .= userRole,
-            "profileid" .= profileId
+            "profileid" .= profileId,
+            "gender" .= gender,
+            "address" .= address,
+            "city" .= city
         ]
 
 instance FromJSON Profile where
@@ -80,7 +86,10 @@ instance FromJSON Profile where
         v .:  "username" <*>
         v .:  "userpassword" <*>
         v .:  "userrole" <*>
-        v .:?  "profileid"
+        v .:?  "profileid" <*>
+        v .: "gender" <*>
+        v .: "address" <*>
+        v .: "city"
 
 -- Doctor
 data Doctor = Doctor
@@ -122,8 +131,8 @@ instance ToJSON Patient where
             "birthday" .= birthday,
             "patientid" .= patientId,
             "insurancetype" .= insuranceType,
-            "nationalId" .= nationalId,
-            "preferredContactMethod" .= preferredContactMethod,
+            "nationalid" .= nationalId,
+            "preferredcontactmethod" .= preferredContactMethod,
             "profileid" .= relPatientProfileId
         ]
 
@@ -132,8 +141,8 @@ instance FromJSON Patient where
             v .: "birthday" <*>
             v .:? "patientid" <*>
             v .: "insurancetype" <*>
-            v .: "nationalId" <*>
-            v .: "preferredContactMethod" <*>
+            v .: "nationalid" <*>
+            v .: "preferredcontactmethod" <*>
             v .: "profileid"
 
 -- Getters
