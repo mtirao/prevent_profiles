@@ -163,6 +163,7 @@ data PatientView = PatientView
         , v_patientId :: Integer
         , v_first_name :: Text
         , v_last_name :: Text
+        , v_profileid :: Integer
     }
 
 instance ToJSON PatientView where
@@ -170,5 +171,6 @@ instance ToJSON PatientView where
             "birthday" .= v_birthday,
             "patientid" .= v_patientId,
             "firstname" .= v_first_name,
-            "lastname" .= v_last_name
+            "lastname" .= v_last_name,
+            "profileid" .= v_profileid
         ]

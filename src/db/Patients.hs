@@ -49,11 +49,11 @@ instance DbOperation Patient where
 
 instance DbViewOperation PatientView where
     vlist pool = do
-                    res <- fetchSimple pool "SELECT birthday, id, last_name, first_name FROM patient_view" :: IO [(LocalTime, Integer, TL.Text, TL.Text)]
-                    return $ map (\(birthday, patientId, lastName, firstName) -> PatientView birthday patientId lastName firstName) res
+                    res <- fetchSimple pool "SELECT birthday, id, last_name, first_name, profile_id FROM patient_view" :: IO [(LocalTime, Integer, TL.Text, TL.Text, Integer)]
+                    return $ map (\(birthday, patientId, lastName, firstName, profileid) -> PatientView birthday patientId firstName lastName profileid) res
 
     vfind pool id = do 
-                        res <- fetch pool (Only id) "SELECT birthday, id, last_name, first_name FROM patient_view WHERE id=?" :: IO [(LocalTime, Integer, TL.Text, TL.Text)]
+                        res <- fetch pool (Only id) "SELECT birthday, id, last_name, first_name, profile_id FROM patient_view WHERE id=?" :: IO [(LocalTime, Integer, TL.Text, TL.Text, Integer)]
                         return $ oneAgent res
-                            where oneAgent ((birthday, patientId, lastName, firstName) : _) = Just $ PatientView birthday patientId firstName lastName
+                            where oneAgent ((birthday, patientId, lastName, firstName, profileid) : _) = Just $ PatientView birthday patientId firstName lastName profileid
                                   oneAgent _ = Nothing
