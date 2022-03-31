@@ -174,3 +174,30 @@ instance ToJSON PatientView where
             "lastname" .= v_last_name,
             "profileid" .= v_profileid
         ]
+
+--- Profile view
+data ProfileView = ProfileView 
+    {
+        v_birthday_profile :: LocalTime
+        , v_cell_phone :: Text
+        , v_email :: Text
+        , v_first_name_profile :: Text
+        , v_id :: Integer
+        , v_last_name_profile :: Text
+        , v_phone :: Text
+        , v_preferred_contact_method :: Text
+        , v_profile_id :: Integer
+    }
+
+instance ToJSON ProfileView where
+    toJSON ProfileView {..} = object [
+            "birthday" .= v_birthday_profile,
+            "patientid" .= v_id,
+            "firstname" .= v_first_name_profile,
+            "lastname" .= v_first_name_profile,
+            "profileid" .= v_profile_id,
+            "email" .= v_email,
+            "cellphone" .= v_cell_phone,
+            "phone" .= v_phone,
+            "preferredcontactmethod" .= v_preferred_contact_method
+        ]

@@ -45,3 +45,8 @@ profileResponse pool profile = do
                                                 where dbProfileResponse  = do
                                                                         jsonResponse a
                                                                         status status201
+
+--- GET
+getProfile pool idd = do
+                        adults <- liftIO $ (vfind pool idd :: IO (Maybe ProfileView))
+                        jsonResponse adults

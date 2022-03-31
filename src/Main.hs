@@ -71,6 +71,9 @@ main = do
 
                 -- PROFILES
                 post "/api/prevent/profile" $ createProfile pool
+                get "/api/prevent/profile/:id" $ do 
+                                                idd <- param "id" :: ActionM TL.Text
+                                                getProfile pool idd
 
                 -- PATIENTS
                 post "/api/prevent/patient" $ createPatient pool

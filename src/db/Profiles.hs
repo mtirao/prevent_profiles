@@ -44,3 +44,15 @@ instance DbOperation Profile where
     list  pool = do
                     res <- fetchSimple pool "SELECT cell_phone, email, first_name, last_name, phone, user_name, user_password, user_role, id, gender, address, city FROM profiles" :: IO [(TL.Text, TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text,TL.Text, Maybe Integer, TL.Text, TL.Text, TL.Text)]
                     return $ map (\(cellPhone, email, firstName, lastName, phone, userName, userPassword, userRole, id, gender, address, city) -> Profile cellPhone email firstName lastName phone userName userPassword userRole id gender address city) res
+
+
+instance DbViewOperation ProfileView where
+    vlist pool = do
+                    res <- fetchSimple pool "SELECT birthday, cell_phone, email, first_name, id, last_name, phone, preferred_contact_method, profile_id FROM profile_view" :: IO [(LocalTime,  TL.Text, TL.Text,  TL.Text, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                    return $ map (\(birthday, cellPhone, email, firstName, id, lastName, phone, preferredContactMethod, profileId) -> ProfileView birthday cellPhone email firstName id lastName phone preferredContactMethod profileId) res
+
+    vfind pool id = do 
+                        res <- fetch pool (Only id) "SELECT birthday, cell_phone, email, first_name, id, last_name, phone, preferred_contact_method, profile_id FROM profile_view WHERE profile_id=?" :: IO [(LocalTime,  TL.Text, TL.Text,  TL.Text, Integer, TL.Text, TL.Text, TL.Text, Integer)]
+                        return $ oneAgent res
+                            where oneAgent ((birthday, cellPhone, email, firstName, id, lastName, phone, preferredContactMethod, profileId) : _) = Just $ ProfileView birthday cellPhone email firstName id lastName phone preferredContactMethod profileId
+                                  oneAgent _ = Nothing
