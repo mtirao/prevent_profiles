@@ -194,7 +194,7 @@ instance ToJSON ProfileView where
             "birthday" .= v_birthday_profile,
             "patientid" .= v_id,
             "firstname" .= v_first_name_profile,
-            "lastname" .= v_first_name_profile,
+            "lastname" .= v_last_name_profile,
             "profileid" .= v_profile_id,
             "email" .= v_email,
             "cellphone" .= v_cell_phone,
