@@ -68,10 +68,10 @@ main = do
                                                                     jsonResponse (ErrorMessage "Wrong password") 
                                                                     status forbidden403
 
-
+   
                 -- PROFILES
                 post "/api/prevent/profile" $ createProfile pool
-                get "/api/prevent/profile/:id" $ do 
+                get "/api/prevent/profile/:id" $ do   -- Query over ProfileView, which includes Patient information
                                                 idd <- param "id" :: ActionM TL.Text
                                                 getProfile pool idd
 

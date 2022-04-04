@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 executable profiles
     hs-source-dirs: src
     main-is:        Main.hs
-    ghc-options:    -threaded -O2 -rtsopts -with-rtsopts=-N  -Wname-shadowing
+    ghc-options:    -threaded -O2 -rtsopts -with-rtsopts=-N
     extensions:     OverloadedStrings
     build-depends:  base                          >=4.6 && <4.7
                     , scotty                        >= 0.9.1
