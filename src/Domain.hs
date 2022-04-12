@@ -52,9 +52,9 @@ data Profile = Profile
     , firstName :: Text
     , lastName :: Text
     , phone :: Text
-    , userName :: Text
-    , userPassword :: Text
-    , userRole :: Text
+    , userName :: Maybe Text
+    , userPassword :: Maybe Text
+    , userRole :: Maybe Text
     , profileId :: Maybe Integer
     , gender :: Text
     , address :: Text
@@ -83,9 +83,9 @@ instance FromJSON Profile where
         v .:  "firstname" <*>
         v .:  "lastname" <*>
         v .:  "phone" <*>
-        v .:  "username" <*>
-        v .:  "userpassword" <*>
-        v .:  "userrole" <*>
+        v .:?  "username" <*>
+        v .:?  "userpassword" <*>
+        v .:?  "userrole" <*>
         v .:?  "profileid" <*>
         v .: "gender" <*>
         v .: "address" <*>
@@ -94,7 +94,7 @@ instance FromJSON Profile where
 -- Doctor
 data Doctor = Doctor
     {
-        doctorId :: Integer
+        doctorId :: Maybe Integer
         , licenseNumber :: Text
         , relDoctorProfileId :: Integer
         , realm :: Text
@@ -103,15 +103,15 @@ data Doctor = Doctor
 instance ToJSON Doctor where
     toJSON Doctor {..} = object [
             "doctorid" .= doctorId,
-            "lincesenumber" .= licenseNumber,
+            "licensenumber" .= licenseNumber,
             "profileid" .= relDoctorProfileId,
             "realm" .= realm
         ]
 
 instance FromJSON Doctor where
     parseJSON (Object v) = Doctor <$>
-        v .:  "doctorid" <*>
-        v .:  "lincesenumber" <*>
+        v .:?  "doctorid" <*>
+        v .:  "licensenumber" <*>
         v .:  "profileid" <*>
         v .:  "realm"
 
@@ -156,6 +156,12 @@ getPassword a = case a of
                 Nothing -> ""
                 Just (Login u p) -> p
 
+extractPassword :: Maybe Text -> Text
+extractPassword a = case a of
+                    Nothing -> ""
+                    Just p -> p
+
+
 --- Patient view
 data PatientView = PatientView
     {
@@ -178,26 +184,57 @@ instance ToJSON PatientView where
 --- Profile view
 data ProfileView = ProfileView 
     {
-        v_birthday_profile :: LocalTime
+        v_birthday_profile :: Maybe LocalTime
         , v_cell_phone :: Text
         , v_email :: Text
         , v_first_name_profile :: Text
         , v_id :: Integer
         , v_last_name_profile :: Text
         , v_phone :: Text
-        , v_preferred_contact_method :: Text
-        , v_profile_id :: Integer
+        , v_user_role :: Text
+        , v_preferred_contact_method :: Maybe Text
+        , v_doctor_id :: Maybe Integer
+        , v_realm :: Maybe Text
+        , v_license_number :: Maybe Text
+        , v_patient_id :: Maybe Integer
+        , v_city :: Text
+        , v_address :: Text
     }
 
 instance ToJSON ProfileView where
     toJSON ProfileView {..} = object [
             "birthday" .= v_birthday_profile,
-            "patientid" .= v_id,
+            "profileid" .= v_id,
             "firstname" .= v_first_name_profile,
             "lastname" .= v_last_name_profile,
-            "profileid" .= v_profile_id,
+            "patientid" .= v_patient_id,
             "email" .= v_email,
             "cellphone" .= v_cell_phone,
             "phone" .= v_phone,
-            "preferredcontactmethod" .= v_preferred_contact_method
+            "preferredcontactmethod" .= v_preferred_contact_method,
+            "doctorid" .= v_doctor_id,
+            "realm" .= v_realm,
+            "licensenumber" .= v_license_number,
+            "userrole" .= v_user_role,
+            "city" .= v_city,
+            "address" .= v_address
+        ]
+
+-- Doctor view 
+data DoctorView = DoctorView
+    {
+        vd_realm :: Text
+        , v_doctorId :: Integer
+        , vd_first_name :: Text
+        , vd_last_name :: Text
+        , vd_profileid :: Integer
+    }
+
+instance ToJSON DoctorView where
+    toJSON DoctorView {..} = object [
+            "realm" .= vd_realm,
+            "doctorid" .= v_doctorId,
+            "firstname" .= vd_first_name,
+            "lastname" .= vd_last_name,
+            "profileid" .= vd_profileid
         ]

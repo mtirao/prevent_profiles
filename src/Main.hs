@@ -7,6 +7,7 @@ import Views
 
 import Controller.ProfilesController
 import Controller.PatientsController
+import Controller.DoctorsController
 
 import qualified Data.Configurator as C
 import qualified Data.Configurator.Types as C
@@ -62,7 +63,7 @@ main = do
                                                             jsonResponse (ErrorMessage "User not found")
                                                             status forbidden403
                                                 Just a -> 
-                                                            if (userPassword a) == (getPassword login) 
+                                                            if extractPassword (userPassword a) == (getPassword login) 
                                                             then jsonResponse a
                                                             else do 
                                                                     jsonResponse (ErrorMessage "Wrong password") 
@@ -74,7 +75,17 @@ main = do
                 get "/api/prevent/profile/:id" $ do   -- Query over ProfileView, which includes Patient information
                                                 idd <- param "id" :: ActionM TL.Text
                                                 getProfile pool idd
+                put "/api/prevent/profile/:id" $ do 
+                                                idd <- param "id" :: ActionM TL.Text
+                                                updateProfile pool idd
 
                 -- PATIENTS
                 post "/api/prevent/patient" $ createPatient pool
                 get "/api/prevent/patients" $ listPatient pool
+
+                -- DOCTORS
+                post "/api/prevent/doctor" $ createDoctor pool
+                get "/api/prevent/doctors" $ listDoctor pool
+                put "/api/prevent/doctor/:id" $ do 
+                                                idd <- param "id" :: ActionM TL.Text
+                                                updateDoctor pool idd

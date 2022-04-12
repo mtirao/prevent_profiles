@@ -46,4 +46,5 @@ executable profiles
         , Db.Profiles
         , Controller.ProfilesController
         , Controller.PatientsController
+        , Controller.DoctorsController
         

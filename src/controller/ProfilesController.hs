@@ -46,6 +46,23 @@ profileResponse pool profile = do
                                                                         jsonResponse a
                                                                         status status201
 
+---UPDTAE
+updateProfile pool id = do
+                        b <- body
+                        profile <- return $ (decode b :: Maybe Profile)
+                        case profile of
+                            Nothing -> status status400
+                            Just _ -> updateProfileResponse pool profile id
+
+updateProfileResponse pool profile id  = do
+                                        dbProfile <- liftIO $  update pool profile id
+                                        case dbProfile of
+                                                Nothing -> status status404
+                                                Just a -> dbProfileResponse 
+                                                        where dbProfileResponse  = do
+                                                                                jsonResponse a
+                                                                                status status200
+
 --- GET
 getProfile pool idd = do
                         adults <- liftIO $ (vfind pool idd :: IO (Maybe ProfileView))
