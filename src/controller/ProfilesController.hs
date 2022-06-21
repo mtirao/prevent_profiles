@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module Controller.ProfilesController where
+module ProfilesController where
 
 import Domain
 import Views
-import Db.Profiles
-import Db.Db
+import Profiles
+import Db
 
 import Web.Scotty
 import Web.Scotty.Internal.Types (ActionT)

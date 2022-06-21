@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module Db.Db where
+module Db where
 
 import Domain
 
@@ -35,7 +35,7 @@ newConn conf = connect defaultConnectInfo
                        }
 
 --------------------------------------------------------------------------------
--- Utilities for interacting with the DB.
+-- Utilities for interacting with the 
 -- No transactions.
 --
 -- Accepts arguments
@@ -54,7 +54,7 @@ execSql pool args sql = withResource pool ins
        where ins conn = execute conn sql args
 
 -------------------------------------------------------------------------------
--- Utilities for interacting with the DB.
+-- Utilities for interacting with the 
 -- Transactions.
 --
 -- Accepts arguments
